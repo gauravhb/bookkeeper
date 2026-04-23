@@ -10,6 +10,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const type = searchParams.get('type') as ExpenseType | null
   const category = searchParams.get('category') as ExpenseCategory | null
+  const from = searchParams.get('from')  // ISO date string
+  const to = searchParams.get('to')      // ISO date string
 
   let query = supabase
     .from('expenses')
@@ -19,6 +21,8 @@ export async function GET(request: Request) {
 
   if (type) query = query.eq('type', type)
   if (category) query = query.eq('category', category)
+  if (from) query = query.gte('created_at', from)
+  if (to) query = query.lte('created_at', to)
 
   const { data, error } = await query
   if (error) return NextResponse.json({ error: error.message }, { status: 500 })

@@ -18,7 +18,7 @@ export async function GET(request: Request) {
 }
 
 async function findUserByPhone(phone: string): Promise<User | null> {
-  const supabase = await createServiceSupabase()
+  const supabase = createServiceSupabase()
   const { data } = await supabase
     .from('users')
     .select('*')
@@ -28,7 +28,7 @@ async function findUserByPhone(phone: string): Promise<User | null> {
 }
 
 async function linkUserByEmail(phone: string, email: string): Promise<boolean> {
-  const supabase = await createServiceSupabase()
+  const supabase = createServiceSupabase()
   const { data, error } = await supabase
     .from('users')
     .update({ whatsapp_number: phone })
@@ -38,7 +38,7 @@ async function linkUserByEmail(phone: string, email: string): Promise<boolean> {
 }
 
 async function switchMode(user: User, mode: 'personal' | 'business') {
-  const supabase = await createServiceSupabase()
+  const supabase = createServiceSupabase()
   await supabase
     .from('users')
     .update({ current_mode: mode, pending_mode: null })
@@ -46,7 +46,7 @@ async function switchMode(user: User, mode: 'personal' | 'business') {
 }
 
 async function setPendingMode(user: User, mode: 'personal' | 'business') {
-  const supabase = await createServiceSupabase()
+  const supabase = createServiceSupabase()
   await supabase
     .from('users')
     .update({ pending_mode: mode })
@@ -54,7 +54,17 @@ async function setPendingMode(user: User, mode: 'personal' | 'business') {
 }
 
 export async function POST(request: Request) {
-  const body = await request.json()
+  const rawBody = await request.text()
+
+  const signature = request.headers.get('x-hub-signature-256')
+  const appSecret = process.env.WHATSAPP_APP_SECRET
+  if (appSecret) {
+    const crypto = await import('crypto')
+    const expected = `sha256=${crypto.createHmac('sha256', appSecret).update(rawBody).digest('hex')}`
+    if (signature !== expected) return new Response('Forbidden', { status: 403 })
+  }
+
+  const body = JSON.parse(rawBody)
 
   // Extract message from Meta payload
   const message = body?.entry?.[0]?.changes?.[0]?.value?.messages?.[0]
@@ -88,7 +98,7 @@ export async function POST(request: Request) {
       const label = user.pending_mode === 'personal' ? '👤 Personal' : '💼 Business'
       await sendWhatsAppMessage(from, `✓ Switched to ${label} mode.`)
     } else {
-      const supabase = await createServiceSupabase()
+      const supabase = createServiceSupabase()
       await supabase.from('users').update({ pending_mode: null }).eq('id', user.id)
       await sendWhatsAppMessage(from, 'Cancelled.')
     }
@@ -108,7 +118,7 @@ export async function POST(request: Request) {
   }
 
   if (text === '/status') {
-    const supabase = await createServiceSupabase()
+    const supabase = createServiceSupabase()
     const { data: recent } = await supabase
       .from('expenses')
       .select('item, amount, type')
@@ -127,7 +137,7 @@ export async function POST(request: Request) {
     return NextResponse.json({ ok: true })
   }
 
-  const supabase = await createServiceSupabase()
+  const supabase = createServiceSupabase()
   await supabase.from('expenses').insert({
     user_id: user.id,
     amount: parsed.amount,

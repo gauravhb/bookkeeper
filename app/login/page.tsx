@@ -7,14 +7,20 @@ export default function LoginPage() {
   const [email, setEmail] = useState('')
   const [password, setPassword] = useState('')
   const [error, setError] = useState('')
+  const [loading, setLoading] = useState(false)
   const router = useRouter()
 
   async function handleSubmit(e: React.FormEvent) {
     e.preventDefault()
     setError('')
+    setLoading(true)
     const supabase = createBrowserSupabase()
     const { error } = await supabase.auth.signInWithPassword({ email, password })
-    if (error) return setError(error.message)
+    if (error) {
+      setLoading(false)
+      return setError(error.message)
+    }
+    setLoading(false)
     router.push('/dashboard')
   }
 
@@ -41,9 +47,10 @@ export default function LoginPage() {
         />
         <button
           type="submit"
-          className="w-full bg-violet-600 text-white rounded-lg py-2 text-sm font-medium hover:bg-violet-700"
+          disabled={loading}
+          className="w-full bg-violet-600 text-white rounded-lg py-2 text-sm font-medium hover:bg-violet-700 disabled:opacity-50"
         >
-          Sign in
+          {loading ? 'Signing in...' : 'Sign in'}
         </button>
       </form>
     </div>
