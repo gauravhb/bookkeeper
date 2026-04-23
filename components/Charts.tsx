@@ -52,7 +52,7 @@ export default function Charts({ expenses }: Props) {
           <BarChart data={monthly} margin={{ top: 0, right: 0, left: -20, bottom: 0 }}>
             <XAxis dataKey="month" tick={{ fontSize: 11 }} />
             <YAxis tick={{ fontSize: 11 }} />
-            <Tooltip formatter={(v: number) => [`₹${v.toLocaleString('en-IN')}`, 'Spent']} />
+            <Tooltip formatter={(v) => [`₹${Number(v ?? 0).toLocaleString('en-IN')}`, 'Spent']} />
             <Bar dataKey="amount" fill="#7c6af7" radius={[3, 3, 0, 0]} />
           </BarChart>
         </ResponsiveContainer>
