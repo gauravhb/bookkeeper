@@ -44,12 +44,13 @@ bot.command('register', async (ctx) => {
   if (!email) return ctx.reply('Usage: /register your@email.com')
 
   const supabase = createServiceSupabase()
-  const { error } = await supabase
+  const { data, error } = await supabase
     .from('users')
     .update({ telegram_chat_id: String(ctx.from.id) })
     .eq('email', email)
+    .select('id')
 
-  if (error) return ctx.reply('Email not found. Contact admin.')
+  if (error || !data || data.length === 0) return ctx.reply('Email not found. Contact admin.')
   await ctx.reply('Linked! You can now log expenses.\nDefault mode: Personal. Send /business to switch.')
 })
 
