@@ -3,7 +3,7 @@ import { createServerSupabase } from '@/lib/supabase/server'
 import type { ExpenseCategory, ExpenseType } from '@/lib/types'
 
 export async function GET(request: Request) {
-  const supabase = createServerSupabase()
+  const supabase = await createServerSupabase()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -38,7 +38,7 @@ export async function GET(request: Request) {
 
   const submitterCounts: Record<string, number> = {}
   for (const e of expenses) {
-    const name = (e.users as { name: string } | null)?.name ?? 'Unknown'
+    const name = (e.users as unknown as { name: string } | null)?.name ?? 'Unknown'
     submitterCounts[name] = (submitterCounts[name] ?? 0) + 1
   }
   const submittedBy = Object.entries(submitterCounts).map(([name, count]) => ({ name, count }))

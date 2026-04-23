@@ -3,7 +3,7 @@ import { createServerSupabase } from '@/lib/supabase/server'
 import type { ExpenseCategory, ExpenseType } from '@/lib/types'
 
 export async function GET(request: Request) {
-  const supabase = createServerSupabase()
+  const supabase = await createServerSupabase()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 
@@ -27,7 +27,7 @@ export async function GET(request: Request) {
 }
 
 export async function POST(request: Request) {
-  const supabase = createServerSupabase()
+  const supabase = await createServerSupabase()
   const { data: { user } } = await supabase.auth.getUser()
   if (!user) return NextResponse.json({ error: 'Unauthorized' }, { status: 401 })
 

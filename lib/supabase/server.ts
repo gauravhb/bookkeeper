@@ -4,8 +4,8 @@ import { createClient } from '@supabase/supabase-js'
 import { cookies } from 'next/headers'
 
 // For server components and API routes — uses the logged-in user's session
-export function createServerSupabase() {
-  const cookieStore = cookies()
+export async function createServerSupabase() {
+  const cookieStore = await cookies()
   return createServerClient(
     process.env.NEXT_PUBLIC_SUPABASE_URL!,
     process.env.NEXT_PUBLIC_SUPABASE_ANON_KEY!,
