@@ -10,6 +10,8 @@ export async function GET(request: Request) {
   const { searchParams } = new URL(request.url)
   const type = searchParams.get('type') as ExpenseType
 
+  if (!type) return NextResponse.json({ error: 'Missing type parameter' }, { status: 400 })
+
   const now = new Date()
   const startOfMonth = new Date(now.getFullYear(), now.getMonth(), 1).toISOString()
   const startOfYear = new Date(now.getFullYear(), 0, 1).toISOString()
