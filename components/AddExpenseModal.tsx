@@ -31,7 +31,10 @@ export default function AddExpenseModal({ type, onClose, onSaved }: Props) {
     })
 
     setLoading(false)
-    if (!res.ok) return setError('Failed to save. Try again.')
+    if (!res.ok) {
+      const body = await res.json().catch(() => ({}))
+      return setError(body.error || 'Failed to save. Try again.')
+    }
 
     const expense: Expense = await res.json()
     onSaved(expense)
