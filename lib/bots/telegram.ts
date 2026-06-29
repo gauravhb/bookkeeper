@@ -7,18 +7,19 @@ export const bot = new Telegraf(process.env.TELEGRAM_BOT_TOKEN!)
 
 async function findUserByChatId(chatId: string): Promise<User | null> {
   const supabase = createServiceSupabase()
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('users')
     .select('*')
     .eq('telegram_chat_id', chatId)
     .single()
+  if (error) console.error('[telegram] findUserByChatId:', error.message)
   return data
 }
 
 async function saveExpense(user: User, parsed: Awaited<ReturnType<typeof parseExpenseMessage>>) {
   if (!parsed) return null
   const supabase = createServiceSupabase()
-  const { data } = await supabase
+  const { data, error } = await supabase
     .from('expenses')
     .insert({
       user_id: user.id,
@@ -30,6 +31,7 @@ async function saveExpense(user: User, parsed: Awaited<ReturnType<typeof parseEx
     })
     .select()
     .single()
+  if (error) console.error('[telegram] saveExpense:', error.message)
   return data
 }
 
@@ -55,7 +57,10 @@ bot.command('register', async (ctx) => {
     .eq('email', email)
     .select('id')
 
-  if (error) return ctx.reply(`DB error: ${error.message}`)
+  if (error) {
+    console.error('[telegram] register:', error.message)
+    return ctx.reply(`DB error: ${error.message}`)
+  }
   if (!data || data.length === 0) return ctx.reply('Email not found. Contact admin.')
   await ctx.reply('Linked! You can now log expenses.\nDefault mode: Personal. Send /business to switch.')
 })
