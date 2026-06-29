@@ -10,7 +10,7 @@ const client = new OpenAI({
   apiKey: process.env.OPENROUTER_API_KEY!,
 })
 
-const MODEL = process.env.OPENROUTER_MODEL ?? 'google/gemini-flash-1.5'
+const MODEL = process.env.OPENROUTER_MODEL ?? 'deepseek/deepseek-v3:free'
 
 export type ParsedExpense = {
   item: string
