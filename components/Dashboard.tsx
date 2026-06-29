@@ -21,18 +21,21 @@ export default function Dashboard({ initialExpenses }: Props) {
   }
 
   return (
-    <div className="max-w-5xl mx-auto p-4">
-      <h1 className="text-2xl font-bold text-gray-800 mb-4">Bookkeeper</h1>
+    <div className="max-w-5xl mx-auto px-4 py-6">
+      <div className="mb-6">
+        <h1 className="text-xl font-semibold text-zinc-900 tracking-tight">Bookkeeper</h1>
+        <p className="text-sm text-zinc-500 mt-0.5">Expense tracker</p>
+      </div>
 
-      <div className="flex">
+      <div className="flex gap-1 mb-0 border-b border-zinc-200">
         {(['personal', 'business'] as ExpenseType[]).map(tab => (
           <button
             key={tab}
             onClick={() => setActiveTab(tab)}
-            className={`px-6 py-2 capitalize text-sm font-medium rounded-t-lg border ${
+            className={`px-4 py-2.5 text-sm font-medium capitalize border-b-2 transition-colors -mb-px ${
               activeTab === tab
-                ? 'bg-white text-violet-600 border-violet-500 border-b-white'
-                : 'bg-gray-100 text-gray-500 border-gray-300'
+                ? 'border-indigo-600 text-indigo-600'
+                : 'border-transparent text-zinc-500 hover:text-zinc-700'
             }`}
           >
             {tab}
@@ -40,7 +43,7 @@ export default function Dashboard({ initialExpenses }: Props) {
         ))}
       </div>
 
-      <div className="bg-white border border-violet-500 rounded-b-lg rounded-tr-lg p-4 space-y-4">
+      <div className="bg-white border border-zinc-200 border-t-0 rounded-b-xl rounded-tr-xl p-4 md:p-6 space-y-6">
         <SummaryCards expenses={filtered} />
         <Charts expenses={filtered} />
         <ExpenseTable

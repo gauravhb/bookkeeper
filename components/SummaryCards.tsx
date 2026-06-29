@@ -42,9 +42,9 @@ export default function SummaryCards({ expenses }: Props) {
   return (
     <div className="grid grid-cols-2 md:grid-cols-4 gap-3">
       {cards.map(card => (
-        <div key={card.label} className="bg-gray-50 border border-gray-200 rounded-lg p-3">
-          <p className="text-xs text-gray-400 uppercase tracking-wide">{card.label}</p>
-          <p className="text-lg font-bold text-gray-800 mt-1 truncate">{card.value}</p>
+        <div key={card.label} className="border border-zinc-100 rounded-lg p-3 bg-zinc-50">
+          <p className="text-xs text-zinc-400">{card.label}</p>
+          <p className="text-lg font-semibold text-zinc-900 mt-1 truncate">{card.value}</p>
         </div>
       ))}
     </div>

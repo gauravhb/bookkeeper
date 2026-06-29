@@ -52,10 +52,10 @@ export default function ExpenseTable({ expenses, onAddClick }: Props) {
           <button
             key={cat}
             onClick={() => setActiveCategory(cat)}
-            className={`px-3 py-1 rounded-full text-xs border ${
+            className={`px-3 py-1 rounded-full text-xs border transition-colors ${
               activeCategory === cat
-                ? 'border-violet-500 text-violet-600 bg-violet-50'
-                : 'border-gray-300 text-gray-500 bg-white'
+                ? 'border-indigo-500 text-indigo-600 bg-indigo-50'
+                : 'border-zinc-200 text-zinc-500 bg-white hover:border-zinc-300'
             }`}
           >
             {cat}
@@ -64,57 +64,57 @@ export default function ExpenseTable({ expenses, onAddClick }: Props) {
         <div className="ml-auto flex gap-2">
           <button
             onClick={handleExport}
-            className="px-3 py-1 rounded border border-violet-500 text-violet-600 text-xs hover:bg-violet-50"
+            className="px-3 py-1.5 rounded-lg border border-zinc-200 text-zinc-600 text-xs hover:bg-zinc-50 transition-colors"
           >
-            ⬇ Export CSV
+            Export CSV
           </button>
           <button
             onClick={onAddClick}
-            className="px-3 py-1 rounded bg-violet-600 text-white text-xs hover:bg-violet-700"
+            className="px-3 py-1.5 rounded-lg bg-indigo-600 text-white text-xs font-medium hover:bg-indigo-700 transition-colors"
           >
-            + Add Expense
+            + Add
           </button>
         </div>
       </div>
 
-      <div className="overflow-x-auto rounded-lg border border-gray-200">
+      <div className="overflow-x-auto rounded-lg border border-zinc-200">
         <table className="w-full text-sm">
-          <thead className="bg-gray-50 text-xs text-gray-400 uppercase tracking-wide">
+          <thead className="bg-zinc-50 text-xs text-zinc-400">
             <tr>
-              <th className="text-left px-4 py-2">Item</th>
-              <th className="text-left px-4 py-2">Category</th>
-              <th className="text-left px-4 py-2">Date</th>
-              <th className="text-right px-4 py-2">Amount</th>
+              <th className="text-left px-4 py-2.5 font-medium">Item</th>
+              <th className="text-left px-4 py-2.5 font-medium">Category</th>
+              <th className="text-left px-4 py-2.5 font-medium hidden sm:table-cell">Date</th>
+              <th className="text-right px-4 py-2.5 font-medium">Amount</th>
             </tr>
           </thead>
           <tbody>
             {filtered.length === 0 ? (
               <tr>
-                <td colSpan={4} className="text-center text-gray-400 py-8">No expenses yet</td>
+                <td colSpan={4} className="text-center text-zinc-400 py-10 text-sm">No expenses yet</td>
               </tr>
             ) : (
               filtered.map(e => (
-                <tr key={e.id} className="border-t border-gray-100 hover:bg-gray-50">
-                  <td className="px-4 py-2 text-gray-800">
-                    {e.item}
+                <tr key={e.id} className="border-t border-zinc-100 hover:bg-zinc-50 transition-colors">
+                  <td className="px-4 py-3 text-zinc-800">
+                    <span className="font-medium">{e.item}</span>
                     {e.users?.name && (
-                      <span className="ml-2 text-xs text-gray-400">· {e.users.name}</span>
+                      <span className="ml-2 text-xs text-zinc-400">· {e.users.name}</span>
                     )}
                     {e.note && (
-                      <span className="ml-1 text-xs text-gray-400 italic">{e.note}</span>
+                      <span className="ml-1 text-xs text-zinc-400 italic">{e.note}</span>
                     )}
                   </td>
-                  <td className="px-4 py-2">
-                    <span className="px-2 py-0.5 rounded-full text-xs bg-violet-50 text-violet-600">
+                  <td className="px-4 py-3">
+                    <span className="px-2 py-0.5 rounded-full text-xs bg-zinc-100 text-zinc-600">
                       {e.category}
                     </span>
                   </td>
-                  <td className="px-4 py-2 text-gray-400 text-xs">
+                  <td className="px-4 py-3 text-zinc-400 text-xs hidden sm:table-cell">
                     {new Date(e.created_at).toLocaleDateString('en-IN', {
                       day: 'numeric', month: 'short', hour: '2-digit', minute: '2-digit',
                     })}
                   </td>
-                  <td className="px-4 py-2 text-right font-semibold text-violet-600">
+                  <td className="px-4 py-3 text-right font-semibold text-zinc-900">
                     ₹{Number(e.amount).toLocaleString('en-IN')}
                   </td>
                 </tr>

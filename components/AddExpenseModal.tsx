@@ -31,19 +31,18 @@ export default function AddExpenseModal({ type, onClose, onSaved }: Props) {
     })
 
     setLoading(false)
-    if (!res.ok) {
-      const body = await res.json().catch(() => ({}))
-      return setError(body.error || 'Failed to save. Try again.')
-    }
+    if (!res.ok) return setError('Failed to save. Try again.')
 
     const expense: Expense = await res.json()
     onSaved(expense)
   }
 
+  const inputClass = 'w-full border border-zinc-300 rounded-lg px-3 py-2.5 text-[16px] text-zinc-900 placeholder:text-zinc-400 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:border-transparent'
+
   return (
-    <div className="fixed inset-0 bg-black/40 flex items-center justify-center z-50 p-4">
-      <div className="bg-white rounded-xl shadow-lg w-full max-w-sm p-6">
-        <h2 className="text-lg font-bold text-gray-800 mb-4">
+    <div className="fixed inset-0 bg-black/30 flex items-end sm:items-center justify-center z-50 p-0 sm:p-4">
+      <div className="bg-white rounded-t-2xl sm:rounded-xl shadow-xl w-full sm:max-w-sm p-6">
+        <h2 className="text-base font-semibold text-zinc-900 mb-4">
           Add {type === 'personal' ? 'Personal' : 'Business'} Expense
         </h2>
         {error && <p className="text-red-500 text-sm mb-3">{error}</p>}
@@ -52,7 +51,7 @@ export default function AddExpenseModal({ type, onClose, onSaved }: Props) {
             placeholder="Item (e.g. Coffee)"
             value={item}
             onChange={e => setItem(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className={inputClass}
             required
           />
           <input
@@ -62,13 +61,13 @@ export default function AddExpenseModal({ type, onClose, onSaved }: Props) {
             onChange={e => setAmount(e.target.value)}
             min="0"
             step="0.01"
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className={inputClass}
             required
           />
           <select
             value={category}
             onChange={e => setCategory(e.target.value as ExpenseCategory)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className={inputClass}
           >
             {CATEGORIES.map(c => <option key={c} value={c}>{c}</option>)}
           </select>
@@ -76,20 +75,20 @@ export default function AddExpenseModal({ type, onClose, onSaved }: Props) {
             placeholder="Note (optional)"
             value={note}
             onChange={e => setNote(e.target.value)}
-            className="w-full border border-gray-300 rounded-lg px-3 py-2 text-sm focus:outline-none focus:ring-2 focus:ring-violet-500"
+            className={inputClass}
           />
           <div className="flex gap-2 pt-1">
             <button
               type="button"
               onClick={onClose}
-              className="flex-1 border border-gray-300 text-gray-600 rounded-lg py-2 text-sm hover:bg-gray-50"
+              className="flex-1 border border-zinc-300 text-zinc-600 rounded-lg py-2.5 text-sm font-medium hover:bg-zinc-50 transition-colors"
             >
               Cancel
             </button>
             <button
               type="submit"
               disabled={loading}
-              className="flex-1 bg-violet-600 text-white rounded-lg py-2 text-sm font-medium hover:bg-violet-700 disabled:opacity-50"
+              className="flex-1 bg-indigo-600 text-white rounded-lg py-2.5 text-sm font-medium hover:bg-indigo-700 disabled:opacity-50 transition-colors"
             >
               {loading ? 'Saving...' : 'Save'}
             </button>
