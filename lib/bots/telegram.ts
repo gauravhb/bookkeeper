@@ -33,6 +33,11 @@ async function saveExpense(user: User, parsed: Awaited<ReturnType<typeof parseEx
   return data
 }
 
+bot.catch(async (err, ctx) => {
+  console.error('Telegraf error:', err)
+  await ctx.reply(`Error: ${(err as Error).message}`)
+})
+
 // /start — welcome message
 bot.command('start', async (ctx) => {
   await ctx.reply('Welcome to Bookkeeper!\nSend /register your@email.com to link your account.')
