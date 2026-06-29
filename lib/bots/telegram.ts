@@ -50,7 +50,8 @@ bot.command('register', async (ctx) => {
     .eq('email', email)
     .select('id')
 
-  if (error || !data || data.length === 0) return ctx.reply('Email not found. Contact admin.')
+  if (error) return ctx.reply(`DB error: ${error.message}`)
+  if (!data || data.length === 0) return ctx.reply('Email not found. Contact admin.')
   await ctx.reply('Linked! You can now log expenses.\nDefault mode: Personal. Send /business to switch.')
 })
 
